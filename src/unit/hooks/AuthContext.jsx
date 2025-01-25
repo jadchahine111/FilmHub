@@ -15,19 +15,6 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  const refreshAccessToken = async () => {
-    try {
-      await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/auth/refresh`,
-        {},
-        { withCredentials: true }
-      )
-      return true
-    } catch (error) {
-      console.error("Failed to refresh access token:", error)
-      return false
-    }
-  }
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -97,13 +84,7 @@ export const AuthProvider = ({ children }) => {
       const originalRequest = error.config
       if (error.response?.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true
-        const refreshed = await refreshAccessToken()
-        if (refreshed) {
-          return authAxios(originalRequest)
-        } else {
-          setIsAuthenticated(false)
-          throw error
-        }
+        setIsAuthenticated(false) // Handle expired access token by setting user as unauthenticated
       }
       return Promise.reject(error)
     }
