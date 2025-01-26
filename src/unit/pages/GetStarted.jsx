@@ -19,6 +19,7 @@ import {
 } from "lucide-react"
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'
 import { useAuth } from "../hooks/AuthContext"
+import axios from 'axios';
 
 export default function GetStarted() {
   const [showPassword, setShowPassword] = useState(false)

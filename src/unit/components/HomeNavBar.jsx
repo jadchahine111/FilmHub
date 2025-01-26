@@ -48,7 +48,7 @@ export default function NavBar() {
       </Sheet>
 
       {/* Logo */}
-      <Link to="/" className="mr-6 hidden lg:flex items-center">
+      <Link to="/movies" className="mr-6 hidden lg:flex items-center">
         <div className=" p-2 rounded-full mr-2">
           <MountainIcon className="h-6 w-6 text-primary-foreground" />
         </div>
