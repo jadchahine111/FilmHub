@@ -6,7 +6,7 @@ import React, {
     useState
   } from "react"
   
-  const WS_URL = "ws://filmhub-api.onrender.com" // WebSocket URL
+  const WS_URL = "wss://filmhub-api.onrender.com" // WebSocket URL
   
   const WebSocketContext = createContext(null)
   
