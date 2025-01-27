@@ -14,7 +14,7 @@ import { MailIcon } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 import axios from "axios"
 
-export default function EmailVerificationPage({ setIsAuthenticated, setIsVerificationAllowed }) {
+export default function EmailVerificationPage({ setIsAuthenticated }) {
   const location = useLocation()
   const navigate = useNavigate()
   const email = location.state?.email || ""
@@ -24,7 +24,6 @@ export default function EmailVerificationPage({ setIsAuthenticated, setIsVerific
   const [isVerified, setIsVerified] = useState(false)
 
   useEffect(() => {
-    setIsVerificationAllowed(true)
     const checkVerificationStatus = async () => {
       try {
         const response = await axios.get(`/api/auth/check-verification/${email}`)
@@ -44,7 +43,7 @@ export default function EmailVerificationPage({ setIsAuthenticated, setIsVerific
       const interval = setInterval(checkVerificationStatus, 5000)
       return () => clearInterval(interval)
     }
-  }, [email, isVerified, navigate, setIsAuthenticated, setIsVerificationAllowed])
+  }, [email, isVerified, navigate, setIsAuthenticated])
 
   useEffect(() => {
     let interval
