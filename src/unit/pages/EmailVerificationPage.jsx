@@ -8,7 +8,7 @@ import { MailIcon } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 import axios from "axios"
 
-export default function EmailVerificationPage({ setIsAuthenticated }) {
+export default function EmailVerificationPage() {
   const location = useLocation()
   const navigate = useNavigate()
   const email = location.state?.email || ""
@@ -32,13 +32,12 @@ export default function EmailVerificationPage({ setIsAuthenticated }) {
 
       if (response.status === 200 && result.isVerified) {
         setIsVerified(true)
-        setIsAuthenticated(true)
         navigate("/movies")
       }
     } catch (error) {
       console.error("Error checking verification status:", error)
     }
-  }, [email, navigate, setIsAuthenticated])
+  }, [email, navigate])
 
   useEffect(() => {
     if (!isVerified) {
@@ -85,7 +84,6 @@ export default function EmailVerificationPage({ setIsAuthenticated }) {
         const result = response.data
         if (result.isVerified) {
           setIsVerified(true)
-          setIsAuthenticated(true)
           navigate("/movies")
         } else {
           // Optionally, show a message to the user that the email is not yet verified

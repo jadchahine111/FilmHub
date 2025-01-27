@@ -1,25 +1,16 @@
+"use client"
+
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  EyeIcon,
-  EyeOffIcon,
-  ArrowLeftIcon,
-  Loader
-} from "lucide-react"
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'
+import { EyeIcon, EyeOffIcon, ArrowLeftIcon, Loader } from "lucide-react"
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google"
 import { useAuth } from "../hooks/AuthContext"
-import axios from 'axios';
+import axios from "axios"
 
 export default function GetStarted() {
   const [showPassword, setShowPassword] = useState(false)
@@ -32,7 +23,7 @@ export default function GetStarted() {
   const [touched, setTouched] = useState({
     name: false,
     email: false,
-    password: false
+    password: false,
   })
 
   const navigate = useNavigate()
@@ -46,26 +37,24 @@ export default function GetStarted() {
     setTouched({
       name: false,
       email: false,
-      password: false
+      password: false,
     })
-  }, [activeTab])
+  }, []) // Removed activeTab dependency
 
-
-
-  const handleBlur = field => {
-    setTouched(prev => ({ ...prev, [field]: true }))
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }))
   }
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
       setLoading(true)
       await googleLogin(credentialResponse.credential)
-      navigate('/movies')
+      navigate("/movies")
     } catch (error) {
-      console.error('Google login error:', error)
+      console.error("Google login error:", error)
       setErrors({
         ...errors,
-        api: 'Failed to login with Google. Please try again.'
+        api: "Failed to login with Google. Please try again.",
       })
     } finally {
       setLoading(false)
@@ -73,11 +62,11 @@ export default function GetStarted() {
   }
 
   const handleGoogleError = (error) => {
-    console.error("Google OAuth error:", error);
+    console.error("Google OAuth error:", error)
     setErrors({
       ...errors,
-      api: 'Google login failed. Please try again.'
-    });
+      api: "Google login failed. Please try again.",
+    })
   }
 
   const googleButton = (
@@ -93,7 +82,7 @@ export default function GetStarted() {
     </GoogleOAuthProvider>
   )
 
-  const handleSignUp = async e => {
+  const handleSignUp = async (e) => {
     e.preventDefault()
     setLoading(true)
 
@@ -103,28 +92,31 @@ export default function GetStarted() {
         {
           name,
           email,
-          password
+          password,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       )
 
       if (response.status === 201) {
-        navigate("/verify-email", { state: { email } })
+        navigate("/verify-email", {
+          state: {
+            email,
+            fromGetStarted: true,
+          },
+        })
       }
     } catch (error) {
       console.error("Error signing up", error.response?.data || error.message)
       setErrors({
         ...errors,
-        api:
-          error.response?.data?.message ||
-          "Something went wrong, please try again."
+        api: error.response?.data?.message || "Something went wrong, please try again.",
       })
     } finally {
       setLoading(false)
     }
   }
 
-  const handleLogin = async e => {
+  const handleLogin = async (e) => {
     e.preventDefault()
     setLoading(true)
 
@@ -135,9 +127,7 @@ export default function GetStarted() {
       console.error("Error logging in", error.response?.data || error.message)
       setErrors({
         ...errors,
-        api:
-          error.response?.data?.message ||
-          "Invalid credentials. Please try again."
+        api: error.response?.data?.message || "Invalid credentials. Please try again.",
       })
     } finally {
       setLoading(false)
@@ -161,9 +151,7 @@ export default function GetStarted() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl text-center">Get Started</CardTitle>
-          <CardDescription className="text-center">
-            Create an account or log in to continue
-          </CardDescription>
+          <CardDescription className="text-center">Create an account or log in to continue</CardDescription>
         </CardHeader>
         <CardContent>
           {googleButton}
@@ -172,16 +160,10 @@ export default function GetStarted() {
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground mt-3">
-                Or continue with
-              </span>
+              <span className="bg-background px-2 text-muted-foreground mt-3">Or continue with</span>
             </div>
           </div>
-          <Tabs
-            value={activeTab}
-            onValueChange={setActiveTab}
-            className="w-full"
-          >
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
               <TabsTrigger value="login">Login</TabsTrigger>
@@ -195,13 +177,11 @@ export default function GetStarted() {
                       id="signup-name"
                       placeholder="John Doe"
                       value={name}
-                      onChange={e => setName(e.target.value)}
+                      onChange={(e) => setName(e.target.value)}
                       onBlur={() => handleBlur("name")}
                       required
                     />
-                    {touched.name && errors.name && (
-                      <p className="text-red-500">{errors.name}</p>
-                    )}
+                    {touched.name && errors.name && <p className="text-red-500">{errors.name}</p>}
                   </div>
                   <div className="flex flex-col space-y-1.5">
                     <Label htmlFor="signup-email">Email</Label>
@@ -210,13 +190,11 @@ export default function GetStarted() {
                       type="email"
                       placeholder="john@example.com"
                       value={email}
-                      onChange={e => setEmail(e.target.value)}
+                      onChange={(e) => setEmail(e.target.value)}
                       onBlur={() => handleBlur("email")}
                       required
                     />
-                    {touched.email && errors.email && (
-                      <p className="text-red-500">{errors.email}</p>
-                    )}
+                    {touched.email && errors.email && <p className="text-red-500">{errors.email}</p>}
                   </div>
                   <div className="flex flex-col space-y-1.5">
                     <Label htmlFor="signup-password">Password</Label>
@@ -225,7 +203,7 @@ export default function GetStarted() {
                         id="signup-password"
                         type={showPassword ? "text" : "password"}
                         value={password}
-                        onChange={e => setPassword(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                         onBlur={() => handleBlur("password")}
                         required
                       />
@@ -236,26 +214,14 @@ export default function GetStarted() {
                         className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                         onClick={() => setShowPassword(!showPassword)}
                       >
-                        {showPassword ? (
-                          <EyeOffIcon className="h-4 w-4" />
-                        ) : (
-                          <EyeIcon className="h-4 w-4" />
-                        )}
-                        <span className="sr-only">
-                          {showPassword ? "Hide" : "Show"} password
-                        </span>
+                        {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+                        <span className="sr-only">{showPassword ? "Hide" : "Show"} password</span>
                       </Button>
                     </div>
-                    {touched.password && errors.password && (
-                      <p className="text-red-500">{errors.password}</p>
-                    )}
+                    {touched.password && errors.password && <p className="text-red-500">{errors.password}</p>}
                   </div>
                   {errors.api && <p className="text-red-500">{errors.api}</p>}
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={loading}
-                  >
+                  <Button type="submit" className="w-full" disabled={loading}>
                     {loading ? <Loader className="animate-spin" /> : "Sign Up"}
                   </Button>
                 </div>
@@ -271,13 +237,11 @@ export default function GetStarted() {
                       type="email"
                       placeholder="john@example.com"
                       value={email}
-                      onChange={e => setEmail(e.target.value)}
+                      onChange={(e) => setEmail(e.target.value)}
                       onBlur={() => handleBlur("email")}
                       required
                     />
-                    {touched.email && errors.email && (
-                      <p className="text-red-solid">{errors.email}</p>
-                    )}
+                    {touched.email && errors.email && <p className="text-red-500">{errors.email}</p>}
                   </div>
                   <div className="flex flex-col space-y-1.5">
                     <Label htmlFor="login-password">Password</Label>
@@ -286,7 +250,7 @@ export default function GetStarted() {
                         id="login-password"
                         type={showPassword ? "text" : "password"}
                         value={password}
-                        onChange={e => setPassword(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                         onBlur={() => handleBlur("password")}
                         required
                       />
@@ -297,26 +261,14 @@ export default function GetStarted() {
                         className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                         onClick={() => setShowPassword(!showPassword)}
                       >
-                        {showPassword ? (
-                          <EyeOffIcon className="h-4 w-4" />
-                        ) : (
-                          <EyeIcon className="h-4 w-4" />
-                        )}
-                        <span className="sr-only">
-                          {showPassword ? "Hide" : "Show"} password
-                        </span>
+                        {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+                        <span className="sr-only">{showPassword ? "Hide" : "Show"} password</span>
                       </Button>
                     </div>
-                    {touched.password && errors.password && (
-                      <p className="text-red-500">{errors.password}</p>
-                    )}
+                    {touched.password && errors.password && <p className="text-red-500">{errors.password}</p>}
                   </div>
                   {errors.api && <p className="text-red-500">{errors.api}</p>}
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={loading}
-                  >
+                  <Button type="submit" className="w-full" disabled={loading}>
                     {loading ? <Loader className="animate-spin" /> : "Login"}
                   </Button>
                 </div>
@@ -328,3 +280,4 @@ export default function GetStarted() {
     </div>
   )
 }
+
